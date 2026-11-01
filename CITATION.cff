@@ -15,8 +15,8 @@ type: software
 license: MIT
 repository-code: "https://github.com/falsify-dev/falsify-giskard"
 url: "https://falsify.dev"
-version: "0.3.0"
-date-released: 2026-07-30
+version: "0.3.1"
+date-released: "2026-11-02"
 keywords:
   - "PRML"
   - "pre-registration"
@@ -35,7 +35,7 @@ preferred-citation:
       given-names: "Cüneyt"
   year: 2026
   url: "https://github.com/falsify-dev/falsify-giskard"
-  version: "0.3.0"
+  version: "0.3.1"
 references:
   - type: software
     title: "falsify — PRML reference implementation"
