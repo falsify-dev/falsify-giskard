@@ -36,7 +36,7 @@ from falsify_giskard.core import (
     MalformedResultError,
 )
 
-__version__ = "0.3.0"
+__version__ = "0.3.1"
 
 __all__ = [
     "preregister",
