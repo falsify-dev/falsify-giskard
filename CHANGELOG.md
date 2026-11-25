@@ -2,6 +2,12 @@
 
 All notable changes to `falsify-giskard` are documented here.
 
+## [0.4.0] — 2026-11-25
+
+### Changed (breaking)
+- **The committed manifest is read the way the reference implementation reads it** (`falsify_prml.load_manifest` and `falsify_prml.validate_manifest`), so this package and `falsify hash` / `falsify verify` agree on every file. A manifest the reference rejects, for example one with a repeated key or a YAML anchor, now raises `MalformedResultError` instead of producing a hash: `verify_scenario_result` raises it instead of returning a verdict. Before, the file was read with `yaml.safe_load` (YAML 1.1) and hashed as read; a few valid inputs that YAML 1.1 reads differently also hashed differently from the reference. If a manifest that worked before is now rejected, `falsify hash <file>` names the reason.
+- **Requires falsify 0.7.2 or later** (the PRML v0.1 erratum of 2026-11-25).
+
 ## [0.3.1] — 2026-11-02
 
 ### Changed

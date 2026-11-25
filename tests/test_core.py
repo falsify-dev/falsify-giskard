@@ -213,3 +213,38 @@ def test_canonical_hash_matches_falsify_prml(tmp_path):
     )
     assert m.hash() == prml.manifest_hash(m.to_dict())
     assert prml.validate_manifest(m.to_dict()) == []
+
+
+# The committed manifest is read the way the reference implementation reads it
+# (falsify_prml.load_manifest + validate_manifest): a file `falsify hash` rejects
+# raises MalformedResultError instead of producing a hash or a verdict.
+from falsify_giskard.core import MalformedResultError
+
+
+def _insert_above(path, key, line):
+    lines = path.read_text(encoding="utf-8").split("\n")
+    i = next(k for k, l in enumerate(lines) if l.startswith(key + ":"))
+    lines.insert(i, line)
+    path.write_text("\n".join(lines), encoding="utf-8")
+
+
+def test_load_matches_reference_reader(tmp_path):
+    path, h = _manifest(tmp_path)
+    _, got = load_committed_manifest(path)
+    assert got == h == prml.manifest_hash(prml.load_manifest(str(path)))
+
+
+def test_repeated_key_is_rejected_not_verified(tmp_path):
+    path, h = _manifest(tmp_path)
+    _insert_above(path, "threshold", "threshold: 0.5")
+    with pytest.raises(MalformedResultError, match="duplicate key"):
+        load_committed_manifest(path)
+    with pytest.raises(MalformedResultError):
+        verify_scenario_result(_result(_check(True)), path, expected_hash=h)
+
+
+def test_anchor_is_rejected(tmp_path):
+    path, _ = _manifest(tmp_path)
+    _insert_above(path, "threshold", "notes: &n x")
+    with pytest.raises(MalformedResultError, match="anchors and aliases"):
+        load_committed_manifest(path)
