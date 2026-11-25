@@ -58,6 +58,8 @@ assert verdict["status"] == "PASS"   # PASS / FAIL / TAMPERED
 - **FAIL** — the hash matches but the observed metric misses the threshold.
 - **TAMPERED** — the manifest no longer matches the lock-time hash passed as `expected_hash` (it was altered after commit). Without `expected_hash`, the hash is taken from the file itself, so only PASS/FAIL is evaluated — pass `expected_hash` for real tamper-evidence.
 
+The manifest is read the way the reference implementation reads it (`falsify_prml.load_manifest` and `validate_manifest`); a file that `falsify hash` rejects raises `MalformedResultError` instead of producing a verdict.
+
 For durable tamper-evidence, commit the returned hash to git or to the public registry at [registry.falsify.dev](https://registry.falsify.dev) right after pre-registration, so the claim is anchored somewhere immutable.
 
 ## License
